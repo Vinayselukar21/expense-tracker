@@ -4,8 +4,8 @@
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "Next-PWA",
-    "short_name": "Next-PWA",
+    "name": "Expense-Tracker",
+    "short_name": "Expense-Tracker",
     "description": "A Demo for Next-PWA",
     "icons": [
         {
