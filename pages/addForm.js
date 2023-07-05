@@ -138,7 +138,7 @@ export default function addForm() {
                   className="w-full bg-gray-100 border border-gray-300 px-3 py-2 rounded-md"
                   required
                 >
-                  <option value="paytm">Paytm</option>
+                  <option value="Paytm">Paytm</option>
                   <option value="cred">Cred</option>
                   <option value="google-pay">Google Pay</option>
                   <option value="card">Card</option>

@@ -6,12 +6,13 @@ import {
   RiUserLine,
 } from "react-icons/ri";
 import { useRouter } from "next/router";
+import Image from "next/image";
+import logo from "../public/logo.png";
 
 function Layout(props) {
   const router = useRouter();
   const [active, setActive] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-
   const handleSetActive = (option) => {
     setActive(option);
     setIsOpen(false);
@@ -23,7 +24,7 @@ function Layout(props) {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <Link href="/" className="text-white text-2xl font-bold">
-                Logo
+                <Image src={logo} height={50} width={60} alt="logo" />
               </Link>
             </div>
             <div className="hidden sm:block">

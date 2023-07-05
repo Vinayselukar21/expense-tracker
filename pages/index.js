@@ -1,9 +1,10 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
+import { FaEdit } from "react-icons/fa";
 
 export default function Home() {
   const [name, setName] = useState("");
-  const [editingName, setEditingName] = useState(false);
+  const [editingName, setEditingName] = useState(true);
   const [totalIncoming, setTotalIncoming] = useState(0);
   const [totalExpenses, setTotalExpenses] = useState(0);
 
@@ -18,13 +19,19 @@ export default function Home() {
 
     if (storedIncoming) {
       const incoming = JSON.parse(storedIncoming);
-      const total = incoming.reduce((sum, item) => sum + Number(item.amount), 0);
+      const total = incoming.reduce(
+        (sum, item) => sum + Number(item.amount),
+        0
+      );
       setTotalIncoming(total);
     }
 
     if (storedExpenses) {
       const expenses = JSON.parse(storedExpenses);
-      const total = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+      const total = expenses.reduce(
+        (sum, expense) => sum + Number(expense.amount),
+        0
+      );
       setTotalExpenses(total);
     }
   }, []);
@@ -62,18 +69,13 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="p-4">
+      <div className="p-4 w-full sm:w-1/2 mx-auto">
         <h2 className="text-2xl font-bold mb-4">Profile</h2>
         {!editingName ? (
-          <div className="mb-4">
-            <p className="text-lg font-bold mb-1">Name:</p>
+          <div className=" flex flex-row align-items-center mb-4">
+            <p className="text-lg font-bold mb-1 mx-3">Name:</p>
             <p className="text-xl">{name}</p>
-            <button
-              className="text-blue-500 underline mt-1"
-              onClick={handleEditName}
-            >
-              Edit
-            </button>
+            <FaEdit onClick={handleEditName} className=" mx-3 my-auto" />
           </div>
         ) : (
           <div className="mb-4">
@@ -97,14 +99,16 @@ export default function Home() {
             </div>
           </div>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <p className="text-xl font-bold">Total Incoming</p>
-            <p className="text-3xl mt-2">₹ {totalIncoming}</p>
-          </div>
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <p className="text-xl font-bold">Total Expenses</p>
-            <p className="text-3xl mt-2">₹ {totalExpenses}</p>
+        <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <p className="text-xl font-bold">Total Incoming</p>
+              <p className="text-3xl mt-2">₹ {totalIncoming}</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <p className="text-xl font-bold">Total Expenses</p>
+              <p className="text-3xl mt-2">₹ {totalExpenses}</p>
+            </div>
           </div>
           <div className="bg-white rounded-lg shadow-md p-4">
             <p className="text-xl font-bold">Comparison</p>
