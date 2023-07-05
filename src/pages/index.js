@@ -1,11 +1,59 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import Head from "next/head";
+import { useState, useEffect } from "react";
 
 export default function Home() {
+  const [name, setName] = useState("");
+  const [editingName, setEditingName] = useState(false);
+  const [totalIncoming, setTotalIncoming] = useState(0);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+
+  useEffect(() => {
+    const storedName = localStorage.getItem("name");
+    if (storedName) {
+      setName(storedName);
+    }
+
+    const storedIncoming = localStorage.getItem("incoming");
+    const storedExpenses = localStorage.getItem("expenses");
+
+    if (storedIncoming) {
+      const incoming = JSON.parse(storedIncoming);
+      const total = incoming.reduce((sum, item) => sum + Number(item.amount), 0);
+      setTotalIncoming(total);
+    }
+
+    if (storedExpenses) {
+      const expenses = JSON.parse(storedExpenses);
+      const total = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+      setTotalExpenses(total);
+    }
+  }, []);
+
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  };
+
+  const handleSaveName = () => {
+    localStorage.setItem("name", name);
+    setEditingName(false);
+  };
+
+  const handleEditName = () => {
+    setEditingName(true);
+  };
+
+  const comparisonMessage = () => {
+    const difference = totalIncoming - totalExpenses;
+    if (difference < 0) {
+      const overspentAmount = Math.abs(difference);
+      return `You Overspent by ₹${overspentAmount} 🥲`;
+    } else if (difference > 0) {
+      return `Yay! You Saved ₹${difference} 🎉`;
+    } else {
+      return "Your Expenses and Income are Balanced";
+    }
+  };
+
   return (
     <>
       <Head>
@@ -14,110 +62,56 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>src/pages/index.js</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
+      <div className="p-4">
+        <h2 className="text-2xl font-bold mb-4">Profile</h2>
+        {!editingName ? (
+          <div className="mb-4">
+            <p className="text-lg font-bold mb-1">Name:</p>
+            <p className="text-xl">{name}</p>
+            <button
+              className="text-blue-500 underline mt-1"
+              onClick={handleEditName}
             >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
+              Edit
+            </button>
+          </div>
+        ) : (
+          <div className="mb-4">
+            <label htmlFor="name" className="block text-lg font-bold mb-1">
+              Name
+            </label>
+            <div className="flex">
+              <input
+                type="text"
+                id="name"
+                className="border rounded-l-lg px-4 py-2 w-full"
+                value={name}
+                onChange={handleNameChange}
               />
-            </a>
+              <button
+                className="bg-blue-500 text-white rounded-r-lg px-4 py-2"
+                onClick={handleSaveName}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="bg-white rounded-lg shadow-md p-4">
+            <p className="text-xl font-bold">Total Incoming</p>
+            <p className="text-3xl mt-2">₹ {totalIncoming}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow-md p-4">
+            <p className="text-xl font-bold">Total Expenses</p>
+            <p className="text-3xl mt-2">₹ {totalExpenses}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow-md p-4">
+            <p className="text-xl font-bold">Comparison</p>
+            <p className="text-lg mt-2">{comparisonMessage()}</p>
           </div>
         </div>
-
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
-          </div>
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
+      </div>
     </>
-  )
+  );
 }
